@@ -29,14 +29,19 @@ async function createDirectory(dir: string): Promise<void> {
 /**
  * This function is used to generate a thumbnail image based on the origanl image
  * and required width, height
- * @param image
  */
-const resizeImg = async (image: Image) => {
+const resize = async (image: Image): Promise<void> => {
     const imageFolder = path.join(__dirname, '../../images');
-    const imagePath = path.join(imageFolder, image.filename);
+    const imagePath = path.join(imageFolder, image.filename + '.jpg');
+    console.log(imagePath);
     const outfolder = path.join(__dirname, '../../thumbnail');
     await createDirectory(outfolder);
-    const outFile: string = path.join(outfolder, image.filename);
+    const outFile: string = path.join(
+        outfolder,
+        `${image.filename}_${image.width}_${image.height}.jpg`
+    );
+    console.log(outFile);
+    console.log(image.filename);
 
     try {
         await sharp(imagePath)
@@ -48,4 +53,4 @@ const resizeImg = async (image: Image) => {
     }
 };
 
-export { resizeImg, createDirectory, Image };
+export { resize, createDirectory, Image };
