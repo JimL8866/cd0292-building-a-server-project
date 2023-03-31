@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { Request, Response, Router } from 'express';
 import images from './api/images';
 
-const routes = express.Router();
+const routes: Router = express.Router();
 
-routes.get('/', (req, res): void => {
+routes.get('/', (req: Request, res: Response): void => {
     console.log('main routes is running');
     res.status(200).send('main route is running');
 });
