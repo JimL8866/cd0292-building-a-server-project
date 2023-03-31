@@ -3,8 +3,9 @@ import images from './api/images';
 
 const routes = express.Router();
 
-routes.get('/', () => {
+routes.get('/', (req, res) => {
     console.log('main routes is running');
+    res.status(200).send('main route is running');
 });
 
 routes.use('/images', images);

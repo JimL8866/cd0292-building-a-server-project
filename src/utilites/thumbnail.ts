@@ -48,4 +48,4 @@ const resizeImg = async (image: Image) => {
     }
 };
 
-export { resizeImg, Image };
+export { resizeImg, createDirectory, Image };
