@@ -1,18 +1,22 @@
-# Image Processing API
-Scripts:
+# Image Processing API Project
 
-1. npm run test 
+## API endpoint:
+1. main route: http://localhost:8000/api  
+it will show "main route is running"  
+2. image resize: http://localhost:8000/api/images?filename=palmtunnel&width=500&height=500  
+it will show the resized picture at 500 width and 500 height  
+it will create a resized image under thumbnail folder  
+if continue reach the same endpoint, the cached image is loaded, and console will log "Serving cached images"  
+
+## Scripts:
+1. npm run test   
 it will show all 4 tests passed
-
-2. npm run lint
+2. npm run lint  
 run eslint and showing no errors
-
-3. npm run prettier
+3. npm run prettier  
 it will show files has been formatted successfully
-
-4. npm start
+4. npm start  
 it will open dev server on port 8000
-
-5. npm run build && node ./dist/app.js
+5. npm run build && node ./dist/app.js  
 it will open build server on port 8000
 
