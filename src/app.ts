@@ -1,7 +1,7 @@
-import express from 'express';
+import express, { Application } from 'express';
 import routes from './routes/index';
 
-const app = express();
+const app: Application = express();
 const port = 8000;
 
 app.use('/api', routes);

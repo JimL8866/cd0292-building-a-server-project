@@ -8,9 +8,9 @@ function fileExists(path: string): boolean {
 }
 
 function inputValidation(
-    fileName: unknown,
-    width: unknown,
-    height: unknown
+    fileName: string | undefined,
+    width: string | undefined,
+    height: string | undefined
 ): boolean {
     if (typeof fileName === 'undefined' || fileName === '') {
         return false;

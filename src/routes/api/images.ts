@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { Request, Response, Router } from 'express';
 import { resize, Image } from '../../utilites/thumbnail';
 import { fileExists, inputValidation } from '../../utilites/validation';
 import path from 'path';
 
-const images = express.Router();
+const images: Router = express.Router();
 
 /**
  * This function is to get the api query parameters
@@ -11,10 +11,10 @@ const images = express.Router();
  * check if cached image available, then sever it
  * Otherwise resized image, then server it
  */
-images.get('/', async (req, res): Promise<void> => {
-    const filename = req.query.filename;
-    const width = req.query.width;
-    const height = req.query.height;
+images.get('/', async (req: Request, res: Response): Promise<void> => {
+    const filename = req.query.filename as string;
+    const width = req.query.width as string;
+    const height = req.query.height as string;
 
     //input sanitizing
     if (!inputValidation(filename, width, height)) {
