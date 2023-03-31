@@ -1,66 +1,66 @@
 import express from 'express';
-import { resizeImg, Image } from '../../utilites/thumbnail';
+import { resize, Image } from '../../utilites/thumbnail';
+import { fileExists, inputValidation } from '../../utilites/validation';
 import path from 'path';
-import fs from 'fs/promises';
 
 const images = express.Router();
-const cache = new Map<string, Image>();
 
 /**
  * This function is to get the api query parameters
- * And call resize function
- * And send resized image back to the client
+ * validate input query data
+ * check if cached image available, then sever it
+ * Otherwise resized image, then server it
  */
-images.get('/', async (req, res) => {
-    const filename = req.query.filename + '.jpg';
+images.get('/', async (req, res): Promise<void> => {
+    const filename = req.query.filename;
+    const width = req.query.width;
+    const height = req.query.height;
 
-    //to check if origianl image avaiable
-    const imagePath = path.join(__dirname, '../../../images', filename);
-
-    try {
-        await fs.access(imagePath);
-    } catch (err) {
-        console.log(err);
-        res.status(404).json('Oringal Image cannot be found');
+    //input sanitizing
+    if (!inputValidation(filename, width, height)) {
+        res.status(400).json(
+            'Invalid Request! Please check your Query Parameters'
+        );
         return;
     }
 
-    const width = Number(req.query.width);
-    const height = Number(req.query.height);
+    const originalImg = path.join(
+        __dirname,
+        '../../../images',
+        filename + '.jpg'
+    );
 
-    //crate data object
-    const data: Image = {
-        filename: filename,
-        width: width,
-        height: height
-    };
-
-    const key = JSON.stringify(data);
-    const cachedImg = cache.get(key);
-    if (cachedImg) {
-        console.log('Serving cached images');
-        const thumbnailPath = path.join(
-            __dirname,
-            '../../../thumbnail',
-            cachedImg.filename
+    //to check if origianl image avaiable
+    if (!fileExists(originalImg)) {
+        res.status(404).json(
+            'Cannot find your Original Image that need to be processed!'
         );
-        try {
-            await fs.access(thumbnailPath);
-            res.sendFile(thumbnailPath);
-        } catch (err) {
-            console.log(err);
-            res.status(404).json('Resized Image cannot be found');
-        }
+        return;
+    }
+
+    /**
+     * check if resized image(cached image) exists
+     * if not exists, start resizing
+     */
+    const resizedImg = path.join(
+        __dirname,
+        '../../../thumbnail',
+        `${filename}_${width}_${height}.jpg`
+    );
+
+    if (fileExists(resizedImg)) {
+        res.status(200).sendFile(resizedImg);
+        console.log('Serving cached image');
     } else {
-        await resizeImg(data);
-        cache.set(key, data);
-        res.set('Cache-Control', 'public, max-age=31536000');
-        const thumbnailPath = path.join(
-            __dirname,
-            '../../../thumbnail',
-            filename
-        );
-        res.status(200).sendFile(thumbnailPath);
+        //create data object
+        const data: Image = {
+            filename: filename as string,
+            width: Number(width),
+            height: Number(height)
+        };
+        await resize(data);
+        res.status(200).sendFile(resizedImg);
+        console.log('Serving first resized image');
     }
 });
 

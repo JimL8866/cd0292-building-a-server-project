@@ -3,7 +3,7 @@
 ## API endpoint:
 1. main route: http://localhost:8000/api  
 it will show "main route is running"  
-2. image resize: http://localhost:8000/api/images?filename=palmtunnel&width=500&height=500  
+2. image resize: http://localhost:8000/api/images?filename=fjord&width=200&height=200  
 it will show the resized picture at 500 width and 500 height  
 it will create a resized image under thumbnail folder  
 if continue reach the same endpoint, the cached image is loaded, and console will log "Serving cached images"  

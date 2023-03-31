@@ -6,7 +6,7 @@ const port = 8000;
 
 app.use('/api', routes);
 
-app.listen(port, () => {
+app.listen(port, (): void => {
     console.log(`Server is currenlty running on http://localhost:${port}`);
 });
 
